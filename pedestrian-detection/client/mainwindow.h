@@ -4,8 +4,61 @@
 #include <QMainWindow>
 #include "ui_form.h"
 #include "client.h"
+#include "videoprocessor.h"
 #include "config.h"
+#include "videosrc.h"
 #include <QMenu>
+class VideoThread{
+    typedef struct data{
+        VideoSrc *p_src;
+        QString url;
+        bool quit;
+        VideoWidget *video_render;
+    }data_t;
+    data_t d;
+
+private:
+    static void fun(data_t *p_data)
+    {
+        p_data->p_src=new VideoSrc(p_data->url.toStdString().data());
+        Mat mt;
+        bool flg;
+        while(!p_data->quit){
+            flg=p_data->p_src->fetch_frame(mt);
+            if(flg){
+                p_data->video_render->update_mat(mt);
+            }
+            this_thread::sleep_for(chrono::milliseconds(30));
+        }
+        delete p_data->p_src;
+    }
+
+public:
+    VideoThread(QString url,VideoWidget *widget)
+    {
+        d.quit=false;
+        //   p_pro=new VideoProcessor;
+        p_thread=new thread(fun,&d);
+        // p_src=new VideoSrc(url.toStdString().data());
+        d.p_src=NULL;
+        d.url=url;
+        d.video_render=widget;
+
+    }
+    ~VideoThread()
+    {
+        d.quit=true;
+        p_thread->join();;
+        delete p_thread;
+        p_thread;
+
+    }
+private:
+    thread *p_thread;
+    // VideoProcessor *p_pro;
+
+};
+
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -43,9 +96,9 @@ private slots:
             if(selected_camera_index>0){//playing
                 if(selected_camera_index==del_index)
                 {
-                   prt(info,"stop playing %d",del_index);
-                  //  window->openGLWidget->stop();//TODO:stop playing
-                   selected_camera_index=0;//means no camera playing
+                    prt(info,"stop playing %d",del_index);
+                    //  window->openGLWidget->stop();//TODO:stop playing
+                    selected_camera_index=0;//means no camera playing
                 }
             }
             //  int size=cam_manager->get_size();
@@ -83,6 +136,7 @@ private:
     QTreeWidgetItem *p_item_device_root;
     QTreeWidgetItem *p_item_device_current;
     int selected_camera_index;
+    VideoThread *p_video_thread;
 };
 
 #endif // MAINWINDOW_H

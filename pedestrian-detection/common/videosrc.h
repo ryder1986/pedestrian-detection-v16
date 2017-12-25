@@ -73,7 +73,7 @@ private:
                     Mat(img).copyTo(mat_rst);
                     if(data->frame_list.size()<10){
                         data->frame_list.push_back(mat_rst);
-                        prt(info,"get frame size %d",data->frame_list.size());
+                    //    prt(info,"get frame size %d",data->frame_list.size());
                     }
                     if(data->frame_wait_time)
                         this_thread::sleep_for(chrono::milliseconds(data->frame_wait_time));

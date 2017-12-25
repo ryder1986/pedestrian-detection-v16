@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     p_cfg=new CameraConfiguration("config.json-client");
     searcher=new ServerInfoSearcher;
     clt=new Client;
+    p_video_thread=NULL;
 }
 
 MainWindow::~MainWindow()
@@ -53,6 +54,14 @@ void MainWindow::on_treeWidget_devices_doubleClicked(const QModelIndex &index)
             if(now<p_cfg->cfg.camera_amount){
                 QString url=p_item_device_current->text(0);
                 qDebug()<<"get "<<url;
+                if(p_video_thread)
+                 {
+
+                    delete p_video_thread;
+                    p_video_thread=NULL;
+                }
+              //  else
+                    p_video_thread=new VideoThread(url,window->openGLWidget);
 //                f->openGLWidget->render_set_mat(mat);
 //                f->openGLWidget->update();
                 // window->openGLWidget->start(p_item_device_current->text(0));//TODO:start playing
