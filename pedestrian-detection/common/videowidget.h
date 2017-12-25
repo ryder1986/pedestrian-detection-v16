@@ -20,6 +20,8 @@ public:
     VideoWidget(QWidget *w)
     {
         tick=0;
+        pos_x=0;
+        pos_y=0;
     }
     int update_mat(Mat frame_mat)
     {
@@ -86,9 +88,14 @@ protected:
 #endif
     }
     void paint_layout2(QPainter &painter){
+      //  painter.beginNativePainting();
+       // makeCurrent();
         QBrush red_brush_trans(QColor(0,0,200,100));
         painter.setBrush(red_brush_trans);
-        painter.drawEllipse(pos_x,pos_y,50,50);
+        painter.drawEllipse(pos_x++%500,pos_y++%500,50,50);
+      //  painter.drawEllipse(500,500,50,50);
+     //    painter.endNativePainting();
+
     }
     void set_data(QByteArray ba)
     {

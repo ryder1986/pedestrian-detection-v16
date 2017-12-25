@@ -113,7 +113,7 @@ public:
         DEBUG,//print most thing(show the running process)
         INFO,//routine output(necessary outputs)
         WARN,//print when warn,take care
-        ERROR,//very serious
+        ERROR1,//very serious
         FATAL//most serous
     };
     enum LABEL_SELECTION{
@@ -198,7 +198,7 @@ public:
         }else         if(!strcmp("warn",label)){
             debug_level=DEBUG_LEVEL::WARN;
         }else         if(!strcmp("error",label)){
-            debug_level=DEBUG_LEVEL::ERROR;
+            debug_level=DEBUG_LEVEL::ERROR1;
         }else         if(!strcmp("fatal",label)){
             debug_level=DEBUG_LEVEL::FATAL;
         }else {

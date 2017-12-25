@@ -18,6 +18,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_search_clicked()
 {
+    if(p_video_thread)
+     {
+
+        delete p_video_thread;
+        p_video_thread=NULL;
+    }
+
     char buf[2000];
     searcher->search_device();
     QString ip=searcher->wait_server_info_reply(2);

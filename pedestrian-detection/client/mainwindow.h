@@ -38,11 +38,12 @@ public:
     {
         d.quit=false;
         //   p_pro=new VideoProcessor;
-        p_thread=new thread(fun,&d);
+
         // p_src=new VideoSrc(url.toStdString().data());
         d.p_src=NULL;
         d.url=url;
         d.video_render=widget;
+        p_thread=new thread(fun,&d);
 
     }
     ~VideoThread()
@@ -85,6 +86,13 @@ private slots:
 
     void del_camera(bool checked)
     {
+        if(p_video_thread)
+         {
+
+            delete p_video_thread;
+            p_video_thread=NULL;
+        }
+
         char buf[2000];
         qDebug()<<"del camera "<<checked;
         int now=p_item_device_current->parent()->indexOfChild(p_item_device_current);
